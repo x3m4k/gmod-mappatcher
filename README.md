@@ -1,27 +1,46 @@
-# mappatcher-gmod
+# MapPatcher Enhanced
+An enhanced version of an addon I liked.
+#### Original Description
 An easy-to-use tool which allows server staff to patch various exploits within maps.
 Multiple exploits exist in maps that allow players to get out of the map when they're not supposed to. This tool allows for server staff to patch such exploits in less than a minute. Aside from exploit patching, this tool also allows you to block off parts of a map using forcefields, or setup teleport points, making your map one of a kind.
+
+#### Original Addon
+* Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=1572250342
+* Repository: https://github.com/h3xcat/gmod-mappatcher
+
+#### Enhanced version
+* Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3032883716
+* Repository: https://github.com/x3m4k/gmod-mappatcher
 
 ## To Clone
 This repo uses submodules so you have to use `git` command to get complete addon. Using the "Download ZIP" will give an incomplete addon!
 
-**Command:** `git clone https://github.com/h3xcat/gmod-mappatcher.git --recurse-submodules`
+**Command:** `git clone https://github.com/x3m4k/gmod-mappatcher.git --recurse-submodules`
 
 ## Steam Workshop
 
-https://steamcommunity.com/sharedfiles/filedetails/?id=1572250342
+https://steamcommunity.com/sharedfiles/filedetails/?id=3032883716
 
-## Video Demo
+## Video Demo (original addon)
 https://www.youtube.com/watch?v=48pFpVRVkpY
 
-## Features
+## Features (original)
 
 * Ability to view map playerclip brushes, makes finding map exploits 100 times easier.
 * No resource files, meaning no impact on download time on join. The textures are generated through Lua.
 * Gamemode independent tool, should work with most gamemodes.
 * Translation support.
 
-## Available Brush Types
+## Features (enhanced)
+* Grid-placement system
+  * Use G+ and G- hotkeys to increase and decrease grid size by 1 unit. By holding shift, you can change size by 8 units per time.
+  * By default, grid system is based on 16 units grid, starting at point 0,0,0. In most cases, this is inconvenient (grid skips your desired spot). To make sure grid is starting at your point, turn off grid system, place a point (with LMB) where you want to start grid, then turn on grid system and grid origin will be at your spot. 
+* Context menu (to open, press RMB on object's name)<br><img width="500" src="https://i.imgur.com/FkaC6pw.png">
+  * Inside context menu you can:
+    * Insert object of any type inside (stacking them in one place)
+    * Change class of the object
+
+## Available Brush Types (original)
 
 * **Player Clip** - Collides with players but nothing else.
 * **Hurt** - Damages players over time, various time intervals are customizable through the menu.
@@ -32,6 +51,11 @@ https://www.youtube.com/watch?v=48pFpVRVkpY
 * **Bullet Clip** - Blocks bullets but nothing else.
 * **Prop Clip** - Blocks props.
 * **Clip** - Blocks everything.
+
+## New Brush Types (enhanced)
+* **[x3m4k] Push** - Push the objects (and players) out.
+* **[x3m4k] Kill** - Kill/delete specified objects when touched.
+* **[x3m4k] Clip** - Multipurpose clip tool.
 
 ## Commands
 
@@ -45,6 +69,6 @@ Just drop the folder into addons folder. If you have ULX or ServerGuard installe
 
 ## Screenshots
 
-![](https://i.imgur.com/roqNMGg.jpg)
-![](https://i.imgur.com/Ngxv1xY.jpg)
-![](https://i.imgur.com/r88T2LT.png)
+![](https://i.imgur.com/lbOL3GR.png)
+![](https://i.imgur.com/NNwDeBc.png)
+![](https://i.imgur.com/Jgmj4So.png)

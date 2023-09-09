@@ -1,3 +1,3 @@
-local plugin = plugin;
+local plugin = plugin
 
-plugin:IncludeFile("shared.lua", SERVERGUARD.STATE.CLIENT);
+plugin:IncludeFile("shared.lua", SERVERGUARD.STATE.CLIENT)

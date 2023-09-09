@@ -3,17 +3,16 @@ TOOL.Description = "Collides only with players."
 
 --------------------------------------------------------------------------------
 
-TOOL.TextureColor = Color(255,200,0,200)
+TOOL.TextureColor = Color(255, 200, 0, 200)
 TOOL.TextureText = "#mappatcher.tools.playerclip.title"
 --------------------------------------------------------------------------------
-function TOOL:EntSetup( ent )
-    ent:SetSolidFlags( FSOLID_CUSTOMBOXTEST )
+function TOOL:EntSetup(ent)
+  ent:SetSolidFlags(FSOLID_CUSTOMBOXTEST)
 end
 
-function TOOL:EntStartTouch( ent )
-end
+function TOOL:EntStartTouch(ent) end
 
-function TOOL:EntShouldCollide( ent )
-    return ent:IsPlayer()
+function TOOL:EntShouldCollide(ent)
+  return ent:IsPlayer()
 end
 --------------------------------------------------------------------------------

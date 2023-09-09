@@ -3,17 +3,16 @@ TOOL.Description = "Doesn't let entities pass through that has prop physics (e.g
 
 --------------------------------------------------------------------------------
 
-TOOL.TextureColor = Color(139,69,19,200)
+TOOL.TextureColor = Color(139, 69, 19, 200)
 TOOL.TextureText = "#mappatcher.tools.propclip.title"
 --------------------------------------------------------------------------------
-function TOOL:EntSetup( ent )
-    ent:SetSolidFlags( FSOLID_CUSTOMBOXTEST )
+function TOOL:EntSetup(ent)
+  ent:SetSolidFlags(FSOLID_CUSTOMBOXTEST)
 end
 
-function TOOL:EntStartTouch( ent )
-end
+function TOOL:EntStartTouch(ent) end
 
-function TOOL:EntShouldCollide( ent )
-    return ent:GetMoveType() == MOVETYPE_VPHYSICS
+function TOOL:EntShouldCollide(ent)
+  return ent:GetMoveType() == MOVETYPE_VPHYSICS
 end
 --------------------------------------------------------------------------------
