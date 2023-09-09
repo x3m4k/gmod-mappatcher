@@ -284,7 +284,9 @@ function Editor.ContextMenu(object)
 end
 
 function Editor.UpdateMenu()
-  Editor.Screen:UpdateMenu()
+  if Editor.Screen ~= nil then
+    Editor.Screen:UpdateMenu()
+  end
 end
 
 function Editor.LoadMapClipBrushes(force)
