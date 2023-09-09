@@ -181,10 +181,39 @@ function TOOL:UpdateEntity()
     points_local[i] = points[i] - origin
   end
 
+  local detected_zero_dimension = false
+
+  -- Bug fix: "Invalid physics object".
+  -- I suppose source engine does not like when an object
+  -- has 0 width/height/depth, so we add some little error
+  -- (in my opinion, it is acceptable)
+  if #points_local > 0 then
+    local vLocal = points_local[#points_local]
+    local vGlobal = points[#points]
+    local addV = Vector(0, 0, 0)
+
+    if vLocal.x == 0 then
+      detected_zero_dimension = true
+      addV.x = 0.01
+    elseif vLocal.y == 0 then
+      detected_zero_dimension = true
+      addV.y = 0.01
+    elseif vLocal.z == 0 then
+      detected_zero_dimension = true
+      addV.z = 0.01
+    end
+
+    vLocal:Add(addV)
+    vGlobal:Add(addV)
+    points_local[#points_local] = vLocal
+    points[#points] = vGlobal
+  end
+
   entity:SetPos(origin)
 
   entity:PhysicsInitConvex(points_local)
   local physobj = entity:GetPhysicsObject()
+
   if IsValid(physobj) then
     physobj:EnableMotion(false)
   else
@@ -202,6 +231,15 @@ function TOOL:UpdateEntity()
 
   if CLIENT then
     entity:DestroyShadow()
+
+    -- Bug fix: "Invalid physics object".
+    if detected_zero_dimension then
+      if MapPatcher.Editor.Tool ~= nil and MapPatcher.Editor.Object ~= nil then
+        MapPatcher.Editor.ResetTool()
+        MapPatcher.Editor.SelectObject(self, false)
+      end
+    end
+    --
   end
 end
 

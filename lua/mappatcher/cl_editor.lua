@@ -424,7 +424,7 @@ function Editor.getGridUserOffset(currentPos)
   y = offsetY + math.floor(currentY / Editor.GridSize) * Editor.GridSize
   z = offsetZ + math.floor(currentZ / Editor.GridSize) * Editor.GridSize
 
-  return Vector(x, y, z)
+  return Vector(x + 0.01, y + 0.01, z + 0.01)
 
 end
 
