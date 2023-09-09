@@ -19,9 +19,9 @@ TOOL.TextureText = "#mappatcher.tools.x3m4k_push.title"
 function TOOL:EntSetup(ent)
   local flags = FSOLID_CUSTOMBOXTEST
 
-  if self.data.clip_bullets then
-    flags = flags + FSOLID_CUSTOMRAYTEST
-  end
+  -- if self.data.clip_bullets then
+  --   flags = flags + FSOLID_CUSTOMRAYTEST
+  -- end
 
   ent:SetSolidFlags(flags)
 
@@ -46,7 +46,7 @@ function TOOL:ObjectCreated()
   data.push_sent = true
   data.push_other_entity = true
   data.divide_force_per_coordinate = true
-  data.clip_bullets = true
+  -- data.clip_bullets = true
   data.force_player_drop = true
   data.drop_time = 1
 
@@ -174,14 +174,14 @@ function TOOL:SetupObjectPanel(panel)
     self.data.push_other_entity = val
   end
 
-  local cbxClipBullets = vgui.Create("DCheckBoxLabel", panel)
-  cbxClipBullets:SetPos(190, 72 + offsetY)
-  cbxClipBullets:SetText("#mappatcher.bullets")
-  cbxClipBullets:SetValue(self.data.clip_bullets)
-  cbxClipBullets:SizeToContents()
-  cbxClipBullets.OnChange = function(panel, val)
-    self.data.clip_bullets = val
-  end
+  -- local cbxClipBullets = vgui.Create("DCheckBoxLabel", panel)
+  -- cbxClipBullets:SetPos(190, 72 + offsetY)
+  -- cbxClipBullets:SetText("#mappatcher.bullets")
+  -- cbxClipBullets:SetValue(self.data.clip_bullets)
+  -- cbxClipBullets:SizeToContents()
+  -- cbxClipBullets.OnChange = function(panel, val)
+  --   self.data.clip_bullets = val
+  -- end
 
   local cbxForcePlayerDrop = vgui.Create("DCheckBoxLabel", panel)
   cbxForcePlayerDrop:SetPos(10, 92 + offsetY)

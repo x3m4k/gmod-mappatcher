@@ -11,9 +11,9 @@ TOOL.TextureText = "#mappatcher.tools.x3m4k_kill.title"
 function TOOL:EntSetup(ent)
   local flags = FSOLID_CUSTOMBOXTEST
 
-  if self.data.clip_bullets then
-    flags = flags + FSOLID_CUSTOMRAYTEST
-  end
+  -- if self.data.clip_bullets then
+  --   flags = flags + FSOLID_CUSTOMRAYTEST
+  -- end
 
   ent:SetSolidFlags(flags)
 
@@ -157,7 +157,7 @@ function TOOL:ObjectCreated()
   data.kill_npc_and_nextbot = true
   data.kill_sent = true
   data.kill_other_entity = true
-  data.clip_bullets = true
+  -- data.clip_bullets = true
   data.force_player_drop = true
 
   self.data = data
@@ -264,12 +264,12 @@ function TOOL:SetupObjectPanel(panel)
     self.data.kill_other_entity = val
   end
 
-  local cbxClipBullets = vgui.Create("DCheckBoxLabel", panel)
-  cbxClipBullets:SetPos(190, 72)
-  cbxClipBullets:SetText("#mappatcher.bullets")
-  cbxClipBullets:SetValue(self.data.clip_bullets)
-  cbxClipBullets:SizeToContents()
-  cbxClipBullets.OnChange = function(panel, val)
-    self.data.clip_bullets = val
-  end
+  -- local cbxClipBullets = vgui.Create("DCheckBoxLabel", panel)
+  -- cbxClipBullets:SetPos(190, 72)
+  -- cbxClipBullets:SetText("#mappatcher.bullets")
+  -- cbxClipBullets:SetValue(self.data.clip_bullets)
+  -- cbxClipBullets:SizeToContents()
+  -- cbxClipBullets.OnChange = function(panel, val)
+  --   self.data.clip_bullets = val
+  -- end
 end
