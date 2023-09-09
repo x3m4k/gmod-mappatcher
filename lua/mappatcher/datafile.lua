@@ -162,8 +162,8 @@ local data_block_writers = {
 }
 
 function MapPatcher.SaveObjectsToFile()
-  file.CreateDir("mappatcher_enchanced")
-  local filename = "mappatcher_enchanced/" .. string.lower(game.GetMap()) .. ".dat"
+  file.CreateDir("mappatcher_enhanced")
+  local filename = "mappatcher_enhanced/" .. string.lower(game.GetMap()) .. ".dat"
   local fl = file.Open(filename, "wb", "DATA")
 
   local buffer = BufferInterface(fl)
@@ -209,7 +209,7 @@ function MapPatcher.LoadObjectsFromFile()
   end
   MapPatcher.Objects = {}
 
-  local filename = "mappatcher_enchanced/" .. string.lower(game.GetMap()) .. ".dat"
+  local filename = "mappatcher_enhanced/" .. string.lower(game.GetMap()) .. ".dat"
   if not file.Exists(filename, "DATA") then
     return
   end

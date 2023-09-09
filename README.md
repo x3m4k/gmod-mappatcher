@@ -4,6 +4,10 @@ An enhanced version of an addon I liked.
 An easy-to-use tool which allows server staff to patch various exploits within maps.
 Multiple exploits exist in maps that allow players to get out of the map when they're not supposed to. This tool allows for server staff to patch such exploits in less than a minute. Aside from exploit patching, this tool also allows you to block off parts of a map using forcefields, or setup teleport points, making your map one of a kind.
 
+# ! This addon will not work if the original MapPatcher is enabled
+## How to migrate from the original MapPatcher addon
+MapPatcher Enhanced stores data in separate directory "mappatcher_enhanced", just copy all files from<br>"\<gmod dir>/garrysmod/data/mappatcher/" to "\<gmod dir>/garrysmod/data/mappatcher_enhanced"
+
 #### Original Addon
 * Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=1572250342
 * Repository: https://github.com/h3xcat/gmod-mappatcher
@@ -33,7 +37,7 @@ https://www.youtube.com/watch?v=48pFpVRVkpY
 
 ## Features (enhanced)
 * Grid-placement system
-  * Use G+ and G- hotkeys to increase and decrease grid size by 1 unit. By holding shift, you can change size by 8 units per time.
+  * Use G+ and G- key combinations to increase and decrease grid size by 1 unit. By holding shift, you can change size by 8 units per time.
   * By default, grid system is based on 16 units grid, starting at point 0,0,0. In most cases, this is inconvenient (grid skips your desired spot). To make sure grid is starting at your point, turn off grid system, place a point (with LMB) where you want to start grid, then turn on grid system and grid origin will be at your spot. 
 * Context menu (to open, press RMB on object's name)<br><img width="500" src="https://i.imgur.com/FkaC6pw.png">
   * Inside context menu you can:
