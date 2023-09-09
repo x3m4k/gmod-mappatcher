@@ -434,9 +434,7 @@ local point_pos = Vector()
 local material_hammer_playerclip =
 Editor.GenerateToolMaterial("mappatcher_hammer_playerclip", Color(255, 0, 255, 200), "Player Clip")
 hook.Add("PostDrawOpaqueRenderables", "MapPatcherEditor", function(bDrawingDepth, bDrawingSkybox)
-  if not MapPatcher.CVarDraw:GetBool() and not Editor.Enabled then
-    return
-  end
+  if (not MapPatcher.CVarDraw:GetBool() or not MapPatcher.HasAccess(LocalPlayer())) and not Editor.Enabled then return end
   render.OverrideDepthEnable(true, true)
 
   if Editor.Enabled then
