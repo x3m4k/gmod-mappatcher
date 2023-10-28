@@ -46,15 +46,17 @@ https://www.youtube.com/watch?v=48pFpVRVkpY
 
 ## Available Brush Types (original)
 
+* **Custom** - A combination of various other tools + extra. Probably something I should have done initially.
 * **Player Clip** - Collides with players but nothing else.
+* **Prop Clip** - Blocks props.
+* **Bullet Clip** - Blocks bullets but nothing else.
+* **Clip** - Blocks everything.
+* **Force Field** - Clip with sound and texture.
 * **Hurt** - Damages players over time, various time intervals are customizable through the menu.
 * **Kill** - Kills anyone on touch.
 * **Remove** - Removes any entities that touches it.
-* **Force Field** - Clip with sound and texture.
 * **Teleport** - Teleport player to given destination.
-* **Bullet Clip** - Blocks bullets but nothing else.
-* **Prop Clip** - Blocks props.
-* **Clip** - Blocks everything.
+* **TP Target** - Teleport target used by teleport brush. 
 
 ## New Brush Types (enhanced)
 * **[x3m4k] Push** - Push the objects (and players) out.
