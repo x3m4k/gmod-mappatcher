@@ -135,7 +135,7 @@ function MapPatcher.GetWindowPaint(title)
   return Func
 end
 
-MapPatcher.CVarDraw = CreateConVar("mappatcher_draw", "0", false, false)
+MapPatcher.CVarDraw = CreateConVar("mappatcher_draw", "0")
 cvars.AddChangeCallback("mappatcher_draw", function(convar_name, value_old, value_new)
   if not MapPatcher.HasAccess(LocalPlayer()) then
     return
