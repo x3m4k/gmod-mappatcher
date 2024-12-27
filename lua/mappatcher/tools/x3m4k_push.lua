@@ -5,7 +5,7 @@ local allDirections = {
   [3] = "+z",
   [4] = "-x",
   [5] = "-y",
-  [6] = "-z",
+  [6] = "-z"
 }
 
 TOOL.Base = "base_brush"
@@ -54,17 +54,9 @@ function TOOL:ObjectCreated()
 end
 
 function TOOL:ToolSwitchFrom(old_object)
-  MapPatcher.Editor.Screen.x3m4kDirections:SetSize(200, 200)
-  MapPatcher.Editor.Screen.x3m4kDirections:GetParent():SetSize(200, 200)
 end
 
 function TOOL:ToolSwitchTo(new_object)
-  if not IsValid(new_object) or new_object.ClassName == "x3m4k_push" then
-    return
-  end
-
-  MapPatcher.Editor.Screen.x3m4kDirections:SetSize(0, 0)
-  MapPatcher.Editor.Screen.x3m4kDirections:GetParent():SetSize(0, 0)
 end
 
 function TOOL:WriteToBuffer(buffer)
@@ -89,9 +81,9 @@ function TOOL:SetupObjectPanel(panel)
 
   local DBtnHelp = vgui.Create("DButton", panel)
   DBtnHelp:SetText(
-    language.GetPhrase("#mappatcher.tools.x3m4k_push.settings.push")
-    .. " "
-  .. language.GetPhrase("#mappatcher.press_for_help"))
+    language.GetPhrase("#mappatcher.tools.x3m4k_push.settings.push") ..
+      " " .. language.GetPhrase("#mappatcher.press_for_help")
+  )
   DBtnHelp:SetPos(10, 10 + offsetY)
   DBtnHelp:SetSize(450, 20)
 
@@ -99,7 +91,8 @@ function TOOL:SetupObjectPanel(panel)
     MapPatcher.Message(
       "#mappatcher.tools.x3m4k_push.help.push",
       nil,
-    language.GetPhrase("#mappatcher.tools.x3m4k_push.settings.push"))
+      language.GetPhrase("#mappatcher.tools.x3m4k_push.settings.push")
+    )
   end
 
   local cbxPushPlayers = vgui.Create("DCheckBoxLabel", panel)
@@ -207,9 +200,9 @@ function TOOL:SetupObjectPanel(panel)
 
   local DBtnDirectionsHelp = vgui.Create("DButton", panel)
   DBtnDirectionsHelp:SetText(
-    language.GetPhrase("#mappatcher.tools.x3m4k_push.settings.directions")
-    .. " "
-  .. language.GetPhrase("#mappatcher.press_for_help"))
+    language.GetPhrase("#mappatcher.tools.x3m4k_push.settings.directions") ..
+      " " .. language.GetPhrase("#mappatcher.press_for_help")
+  )
   DBtnDirectionsHelp:SetPos(10, 134 + offsetY)
   DBtnDirectionsHelp:SetSize(450, 20)
 
@@ -217,7 +210,8 @@ function TOOL:SetupObjectPanel(panel)
     MapPatcher.Message(
       "#mappatcher.tools.x3m4k_push.help.directions",
       nil,
-    language.GetPhrase("#mappatcher.tools.x3m4k_push.settings.directions"))
+      language.GetPhrase("#mappatcher.tools.x3m4k_push.settings.directions")
+    )
   end
 
   local function onSelectDirection(directionKey, value)
@@ -379,13 +373,9 @@ end
 
 function TOOL:EntShouldCollide(ent)
   if
-    ent:IsRagdoll()
-    or ent:IsPlayer()
-    or ent:IsVehicle()
-    or ent:IsNPC()
-    or ent:IsNextBot()
-    or ent:GetClass() == "prop_physics"
-    then
+    ent:IsRagdoll() or ent:IsPlayer() or ent:IsVehicle() or ent:IsNPC() or ent:IsNextBot() or
+      ent:GetClass() == "prop_physics"
+   then
     return false
   end
 

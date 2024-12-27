@@ -128,10 +128,6 @@ function TOOL:BuildMesh(force)
 end
 
 function TOOL:ToolSwitchFrom(old_object)
-  if old_object:IsDerivedFrom("x3m4k_push") and not self:IsDerivedFrom("x3m4k_push") then
-    MapPatcher.Editor.Screen.x3m4kDirections:SetSize(0, 0)
-    MapPatcher.Editor.Screen.x3m4kDirections:GetParent():SetSize(0, 0)
-  end
 end
 
 function TOOL:ShouldSave()
@@ -239,7 +235,7 @@ function TOOL:UpdateEntity()
         MapPatcher.Editor.SelectObject(self, false)
       end
     end
-    --
+  --
   end
 end
 

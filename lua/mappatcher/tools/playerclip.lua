@@ -1,5 +1,7 @@
 TOOL.Base = "base_brush"
-TOOL.Description = "Collides only with players."
+if CLIENT then
+  TOOL.Description = language.GetPhrase("mappatcher.tools.playerclip.description")
+end
 
 --------------------------------------------------------------------------------
 
@@ -10,7 +12,8 @@ function TOOL:EntSetup(ent)
   ent:SetSolidFlags(FSOLID_CUSTOMBOXTEST)
 end
 
-function TOOL:EntStartTouch(ent) end
+function TOOL:EntStartTouch(ent)
+end
 
 function TOOL:EntShouldCollide(ent)
   return ent:IsPlayer()

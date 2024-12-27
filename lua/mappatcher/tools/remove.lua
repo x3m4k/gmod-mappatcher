@@ -1,6 +1,7 @@
 TOOL.Base = "base_brush"
-TOOL.Description =
-"Removes any entities that touches this brush. Except for players, in which they would just silently die."
+if CLIENT then
+  TOOL.Description = language.GetPhrase("mappatcher.tools.remove.description")
+end
 --------------------------------------------------------------------------------
 TOOL.TextureColor = Color(255, 0, 0, 200)
 TOOL.TextureText = "#mappatcher.tools.remove.title"

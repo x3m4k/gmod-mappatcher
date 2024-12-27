@@ -1,7 +1,9 @@
 local TOOL = TOOL
 
 TOOL.Base = "base_brush"
-TOOL.Description = "A combination of various other tools + extra. Probably something I should have done initially."
+if CLIENT then
+  TOOL.Description = language.GetPhrase("mappatcher.tools.custom.description")
+end
 --------------------------------------------------------------------------------
 TOOL.TextureColor = Color(155, 155, 155, 200)
 TOOL.TextureText = "#mappatcher.tools.custom.title"
@@ -73,14 +75,16 @@ function TOOL:EntSetup(ent)
 
     if self.data.texture == "forcefield" then
       ent.snd_forcefield_loop = "mappatcher_forcefield_loop_" .. (ent:EntIndex())
-      sound.Add({
-        name = "mappatcher_forcefield_loop_" .. (ent:EntIndex()),
-        channel = CHAN_AUTO,
-        volume = 0.5,
-        level = 55,
-        pitch = 100,
-        sound = "ambient/energy/force_field_loop1.wav",
-      })
+      sound.Add(
+        {
+          name = "mappatcher_forcefield_loop_" .. (ent:EntIndex()),
+          channel = CHAN_AUTO,
+          volume = 0.5,
+          level = 55,
+          pitch = 100,
+          sound = "ambient/energy/force_field_loop1.wav"
+        }
+      )
       ent:EmitSound(ent.snd_forcefield_loop)
     end
   end
@@ -92,28 +96,14 @@ function TOOL:SetupObjectPanel(panel)
   -- Invert Group:
   -- Texture: Force Field, Stripes, Solid, Invisible
   -- Color:
+  local textSizes = {}
+
   local lblClip = vgui.Create("DLabel", panel)
   lblClip:SetTextColor(Color(255, 255, 255, 255))
   lblClip:SetPos(10, 10)
   lblClip:SetText("#mappatcher.tools.custom.settings.clip")
-
-  local cbxClipPlayer = vgui.Create("DCheckBoxLabel", panel)
-  cbxClipPlayer:SetPos(55, 12)
-  cbxClipPlayer:SetText("#mappatcher.tools.custom.settings.player")
-  cbxClipPlayer:SetValue(self.data.clip_player)
-  cbxClipPlayer:SizeToContents()
-  cbxClipPlayer.OnChange = function(panel, val)
-    self.data.clip_player = val
-  end
-
-  local cbxClipProps = vgui.Create("DCheckBoxLabel", panel)
-  cbxClipProps:SetPos(120, 12)
-  cbxClipProps:SetText("#mappatcher.tools.custom.settings.props")
-  cbxClipProps:SetValue(self.data.clip_prop)
-  cbxClipProps:SizeToContents()
-  cbxClipProps.OnChange = function(panel, val)
-    self.data.clip_prop = val
-  end
+  lblClip:SizeToContents()
+  table.Add(textSizes, {lblClip:GetTextSize()})
 
   --[[
     local cbxClipBullets = vgui.Create( "DCheckBoxLabel", panel )
@@ -134,14 +124,39 @@ function TOOL:SetupObjectPanel(panel)
         self.data.clip_other = val
     end
     ]]
-
   local lblGroup = vgui.Create("DLabel", panel)
   lblGroup:SetTextColor(Color(255, 255, 255, 255))
   lblGroup:SetPos(10, 35)
   lblGroup:SetText("#mappatcher.tools.custom.settings.block")
+  lblGroup:SizeToContents()
+  table.Add(textSizes, {lblGroup:GetTextSize()})
+
+  table.sort(textSizes)
+
+  local maxMargin = textSizes[#textSizes] + 15
+
+  local cbxClipPlayer = vgui.Create("DCheckBoxLabel", panel)
+  cbxClipPlayer:SetPos(maxMargin, 12)
+  cbxClipPlayer:SetText("#mappatcher.tools.custom.settings.player")
+  cbxClipPlayer:SetValue(self.data.clip_player)
+  cbxClipPlayer:SizeToContents()
+  table.Add(textSizes, {cbxClipPlayer:GetTextSize()})
+  cbxClipPlayer.OnChange = function(panel, val)
+    self.data.clip_player = val
+  end
+
+  local cbxClipProps = vgui.Create("DCheckBoxLabel", panel)
+  cbxClipProps:SetPos(maxMargin + cbxClipPlayer:GetSize() + 15, 12)
+  cbxClipProps:SetText("#mappatcher.tools.custom.settings.props")
+  cbxClipProps:SetValue(self.data.clip_prop)
+  cbxClipProps:SizeToContents()
+  table.Add(textSizes, {cbxClipProps:GetTextSize()})
+  cbxClipProps.OnChange = function(panel, val)
+    self.data.clip_prop = val
+  end
 
   local cmbGroup = vgui.Create("DComboBox", panel)
-  cmbGroup:SetPos(55, 35)
+  cmbGroup:SetPos(maxMargin, 35)
   cmbGroup:SetSize(110, 20)
   for key, group in pairs(MapPatcher.Groups.GetGroups()) do
     cmbGroup:AddChoice(MapPatcher.Groups.GetName(group), group, self.data.group == group)
@@ -151,7 +166,7 @@ function TOOL:SetupObjectPanel(panel)
   end
 
   local cbxGroupInvert = vgui.Create("DCheckBoxLabel", panel)
-  cbxGroupInvert:SetPos(170, 37)
+  cbxGroupInvert:SetPos(maxMargin + 110 + 15, 37)
   cbxGroupInvert:SetText("#mappatcher.tools.custom.settings.invert")
   cbxGroupInvert:SetValue(self.data.group_invert)
   cbxGroupInvert:SizeToContents()
@@ -166,7 +181,7 @@ function TOOL:SetupObjectPanel(panel)
   lblTexture:SetText("#mappatcher.tools.custom.settings.texture")
 
   local cmbGroup = vgui.Create("DComboBox", panel)
-  cmbGroup:SetPos(55, 60)
+  cmbGroup:SetPos(maxMargin, 60)
   cmbGroup:SetSize(110, 20)
   cmbGroup:AddChoice("#mappatcher.tools.custom.settings.invisible", "", self.data.texture == "")
   cmbGroup:AddChoice("#mappatcher.tools.custom.settings.forcefield", "forcefield", self.data.texture == "forcefield")
@@ -181,7 +196,7 @@ function TOOL:SetupObjectPanel(panel)
   lblColor:SetText("#mappatcher.tools.custom.settings.color")
 
   local colorPicker = vgui.Create("DColorMixer", panel)
-  colorPicker:SetPos(55, 85)
+  colorPicker:SetPos(maxMargin, 85)
   colorPicker:SetSize(300, 200)
   colorPicker:SetPalette(true)
   colorPicker:SetAlphaBar(true)
@@ -201,7 +216,8 @@ function TOOL:EntRemove(ent)
   end
 end
 
-function TOOL:EntStartTouch(ent) end
+function TOOL:EntStartTouch(ent)
+end
 
 function TOOL:EntShouldCollide(ent)
   if self.data.clip_player and ent:IsPlayer() then

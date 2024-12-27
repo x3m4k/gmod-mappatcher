@@ -5,6 +5,7 @@ local BufferInterface = MapPatcher.Libs.BufferInterface
 MapPatcher.Editor = MapPatcher.Editor or {}
 local Editor = MapPatcher.Editor
 Editor.GridSize = 16
+Editor.LadderEnts = {}
 
 Editor.Tools = {
   "custom",
@@ -21,6 +22,7 @@ Editor.Tools = {
   "x3m4k_push",
   "x3m4k_kill",
   "x3m4k_clip",
+  "x3m4k_ladder"
 }
 
 Editor.ToolsBase = {
@@ -38,6 +40,7 @@ Editor.ToolsBase = {
   ["x3m4k_push"] = "brush",
   ["x3m4k_kill"] = "brush",
   ["x3m4k_clip"] = "brush",
+  ["x3m4k_ladder"] = "point",
 }
 
 -- see https://wiki.facepunch.com/gmod/Silkicons
@@ -56,6 +59,7 @@ Editor.ToolsIcons16 = {
   ["x3m4k_push"] = "arrow_right",
   ["x3m4k_kill"] = "bomb",
   ["x3m4k_clip"] = "stop",
+  ["x3m4k_ladder"] = "arrow_up",
 }
 
 function Editor.Start()
@@ -140,6 +144,9 @@ function Editor.SubmitObject(obj, focus_type)
   if object.Base == "base_brush" and #object.points <= 3 then
     MapPatcher.Message("#mappatcher.error.object_points_min_4", "OK", "#mappatcher.error")
     return
+  elseif object.Base == "base_point" and (object.point == nil or object.point == Vector()) then
+    MapPatcher.Message("#mappatcher.error.nothing_to_submit", "OK", "#mappatcher.error")
+    return
   end
 
   net.Start("mappatcher_submit")
@@ -181,13 +188,17 @@ function Editor.SetTool(tool, no_object)
   tool = tool or Editor.Tool
   Editor.Tool = tool
 
+  if IsValid(tool) then
+    tool:ToolSwitchFrom(Editor.Object and Editor.Object.ClassName or nil)
+  end
+
   if not no_object then
     local new_object = MapPatcher.NewToolObject(tool)
 
     local object = Editor.Object
     if IsValid(object) then
-      new_object:ToolSwitchFrom(object)
-      object:ToolSwitchTo(new_object)
+      new_object:ToolSwitchFrom(tool.ClassName)
+      object:ToolSwitchTo(new_object.ClassName)
     end
 
     Editor.Object = new_object
@@ -197,9 +208,12 @@ function Editor.SetTool(tool, no_object)
 end
 
 function Editor.SelectObject(object, look)
-  Editor.Object:ToolSwitchTo(object)
+  if object == nil then return end
+  Editor.Object:ToolSwitchTo(object and object.ClassName or nil)
   if (IsValid(Editor.Object) and Editor.Object.ID ~= 0) or object:IsDerivedFrom("x3m4k_push") then
-    object:ToolSwitchFrom(Editor.Object)
+    object:ToolSwitchFrom(object.ClassName)
+  else
+    object:ToolSwitchFrom(nil)
   end
 
   Editor.Object = object:GetCopy()
@@ -334,23 +348,26 @@ do
       local mat_name = data.mat_name
       local color = data.color
       local text = data.text
-      local rt_tex = GetRenderTarget(mat_name, 256, 256, true)
+      local mat_size = data.mat_size
+      local mat_size_w, mat_size_h = mat_size[1], mat_size[2]
+      local rt_tex = GetRenderTarget(mat_name, mat_size_w, mat_size_h, true)
       mat:SetTexture("$basetexture", rt_tex)
 
       render.PushRenderTarget(rt_tex)
 
-      render.SetViewPort(0, 0, 256, 256)
+      render.SetViewPort(0, 0, mat_size_w, mat_size_h)
       render.OverrideAlphaWriteEnable(true, true)
+      
       cam.Start2D()
-      render.Clear(color.r, color.g, color.b, color.a)
-      surface.SetFont(mappatcher_tool_font)
-      surface.SetTextColor(255, 255, 255, 255)
-      local txt_w, txt_h = surface.GetTextSize(text)
-      surface.SetTextPos(128 - txt_w / 2, 128 - txt_h / 2)
-      surface.DrawText(text)
-
-      surface.SetDrawColor(255, 255, 255)
-      surface.DrawOutlinedRect(10, 10, 256 - 10, 256 - 10)
+        render.Clear(color.r, color.g, color.b, color.a)
+        surface.SetFont(mappatcher_tool_font)
+        surface.SetTextColor(255, 255, 255, 255)
+        local txt_w, txt_h = surface.GetTextSize(text)
+        surface.SetTextPos((mat_size_w - txt_w) / 2, (mat_size_h - txt_h) / 2)
+        surface.DrawText(text)
+        
+        surface.SetDrawColor(255, 255, 255)
+        surface.DrawOutlinedRect(10, 10, mat_size_w - 10, mat_size_h - 10)
       cam.End2D()
 
       render.OverrideAlphaWriteEnable(false)
@@ -359,9 +376,10 @@ do
     tool_mats_queue = {}
   end)
 
-  function Editor.GenerateToolMaterial(mat_name, color, text)
+  function Editor.GenerateToolMaterial(mat_name, color, text, mat_size)
+    if mat_size == nil then mat_size = {256, 256} end
     local mat = CreateMaterial(mat_name, "UnlitGeneric", {["$vertexalpha"] = 1})
-    tool_mats_queue[#tool_mats_queue + 1] = {mat_name = mat_name, color = color, text = text, mat = mat}
+    tool_mats_queue[#tool_mats_queue + 1] = {mat_name = mat_name, color = color, text = text, mat = mat, mat_size = mat_size}
     return mat
   end
 end
@@ -380,7 +398,7 @@ function MapPatcher.GetToolMaterial(tool_type, noalpha)
     local texture_color = table.Copy(tool_class.TextureColor)
     texture_color.a = 255
     tool_class.EditorMaterial =
-    Editor.GenerateToolMaterial("mappatcher_" .. tool_type, texture_color, tool_class.TextureText)
+    Editor.GenerateToolMaterial("mappatcher_" .. tool_type, texture_color, tool_class.TextureText, tool_class.TextureSize)
     return tool_class.EditorMaterial
   else
     if tool_class.EditorMaterialAlpha then
@@ -390,7 +408,8 @@ function MapPatcher.GetToolMaterial(tool_type, noalpha)
     tool_class.EditorMaterialAlpha = Editor.GenerateToolMaterial(
       "mappatcher_" .. tool_type .. "_alpha",
       tool_class.TextureColor,
-      tool_class.TextureText
+      tool_class.TextureText,
+      tool_class.TextureSize
     )
     return tool_class.EditorMaterialAlpha
   end

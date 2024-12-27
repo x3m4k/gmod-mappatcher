@@ -1,5 +1,7 @@
 TOOL.Base = "base_brush"
-TOOL.Description = "Kill players on touch."
+if CLIENT then
+  TOOL.Description = language.GetPhrase("mappatcher.tools.kill.description")
+end
 --------------------------------------------------------------------------------
 TOOL.TextureColor = Color(255, 0, 0, 200)
 TOOL.TextureText = "#mappatcher.tools.kill.title"

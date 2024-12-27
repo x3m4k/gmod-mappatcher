@@ -4,11 +4,12 @@ MapPatcher.Libs = {
   luabsp = include("lib_luabsp/luabsp.lua"),
   quickhull = include("lib_quickhull/quickhull.lua"),
   BufferInterface = include("lib_bufferinterface/bufferinterface.lua"),
-  Stream = include("lib_stream/stream.lua"),
+  Stream = include("lib_stream/stream.lua")
 }
 
 MapPatcher.Tools = {}
 MapPatcher.Objects = {}
+MapPatcher.LadderEnts = {}
 
 function MapPatcher.HasAccess(ply)
   if not IsValid(ply) or not ply:IsPlayer() then
@@ -90,51 +91,76 @@ function MapPatcher.NewToolObject(class_name, id)
 end
 MapPatcher.NULL = MapPatcher.NewToolObject("null")
 
-hook.Add("Initialize", "MapPatcher", function()
-  if CLIENT then
-    concommand.Add("mappatcher", function(ply, cmd, args, argStr)
-      RunConsoleCommand("_mappatcher")
-    end)
-  elseif SERVER then
-    concommand.Add("_mappatcher", function(ply, cmd, args, argStr)
-      if not IsValid(ply) then
-        return
-      end
-      if not MapPatcher.HasAccess(ply) then
-        ply:PrintMessage(HUD_PRINTCONSOLE, "[MapPatcher] Access Denied!")
-        return
-      end
-      MapPatcher.StartEditMode(ply)
-    end)
+hook.Add(
+  "Initialize",
+  "MapPatcher",
+  function()
+    if CLIENT then
+      concommand.Add(
+        "mappatcher",
+        function(ply, cmd, args, argStr)
+          RunConsoleCommand("_mappatcher")
+        end
+      )
+    elseif SERVER then
+      concommand.Add(
+        "_mappatcher",
+        function(ply, cmd, args, argStr)
+          if not IsValid(ply) then
+            return
+          end
+          if not MapPatcher.HasAccess(ply) then
+            ply:PrintMessage(HUD_PRINTCONSOLE, "[MapPatcher] Access Denied!")
+            return
+          end
+          MapPatcher.StartEditMode(ply)
+        end
+      )
+    end
   end
-end)
+)
 
 --------------------------------------------------------------------------------
 
-hook.Add("ShouldCollide", "MapPatcherObject", function(ent1, ent2)
-  local b1, b2
-  if ent1.MapPatcherObject and ent1.object then
-    b1 = ent1.object:EntShouldCollide(ent2)
-  end
-  if ent2.MapPatcherObject and ent2.object then
-    b2 = ent2.object:EntShouldCollide(ent1)
-  end
+hook.Add(
+  "ShouldCollide",
+  "MapPatcherObject",
+  function(ent1, ent2)
+    local b1, b2
+    if ent1.MapPatcherObject and ent1.object then
+      b1 = ent1.object:EntShouldCollide(ent2)
+    end
+    if ent2.MapPatcherObject and ent2.object then
+      b2 = ent2.object:EntShouldCollide(ent1)
+    end
 
-  if b1 == false or b2 == false then
-    return false
-  elseif b1 == true or b2 == true then
-    return true
-  end
-end, HOOK_HIGH)
+    if b1 == false or b2 == false then
+      return false
+    elseif b1 == true or b2 == true then
+      return true
+    end
+  end,
+  HOOK_HIGH
+)
 
-hook.Add("CanTool", "MapPatcherObject", function(ply, tr, tool)
-  if IsValid(tr.Entity) and tr.Entity.MapPatcherObject then
-    return false
-  end
-end, HOOK_HIGH)
+hook.Add(
+  "CanTool",
+  "MapPatcherObject",
+  function(ply, tr, tool)
+    if IsValid(tr.Entity) and tr.Entity.MapPatcherObject then
+      return false
+    end
+  end,
+  HOOK_HIGH
+)
 
-hook.Add("PhysgunPickup", "MapPatcherObject", function(ply, ent)
-  if ent.MapPatcherObject then
-    return false
-  end
-end, HOOK_HIGH)
+hook.Add(
+  "PhysgunPickup",
+  "MapPatcherObject",
+  function(ply, ent)
+    if ent.MapPatcherObject then
+      return false
+    end
+  end,
+  HOOK_HIGH
+)

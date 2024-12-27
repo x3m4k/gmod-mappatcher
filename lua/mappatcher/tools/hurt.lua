@@ -1,8 +1,9 @@
 local TOOL = TOOL
 
 TOOL.Base = "base_brush"
-TOOL.Description =
-"Damages entities overtime when they're inside the brush. There are 3 types of damage types. Generic damage type does basic damage. Poison damage type does damage similar to poison headcrab, the health will regenerate over time. Dissolve damage type works similarly to generic, except it will dissolve player bodies when they die."
+if CLIENT then
+  TOOL.Description = language.GetPhrase("mappatcher.tools.hurt.description")
+end
 --------------------------------------------------------------------------------
 TOOL.TextureColor = Color(255, 69, 0, 200)
 TOOL.TextureText = "#mappatcher.tools.hurt.title"

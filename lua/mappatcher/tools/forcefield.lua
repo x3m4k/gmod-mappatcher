@@ -1,5 +1,7 @@
 TOOL.Base = "base_brush"
-TOOL.Description = "Works similarly to clip brush, but with addition of forcefield effect."
+if CLIENT then
+  TOOL.Description = language.GetPhrase("mappatcher.tools.forcefield.description")
+end
 --------------------------------------------------------------------------------
 TOOL.TextureColor = Color(100, 100, 255, 200)
 TOOL.TextureText = "#mappatcher.tools.force_field.title"
@@ -25,14 +27,16 @@ function TOOL:EntSetup(ent)
     ent:SetRenderBounds(min, max)
 
     ent.snd_forcefield_loop = "mappatcher_forcefield_loop_" .. (ent:EntIndex())
-    sound.Add({
-      name = "mappatcher_forcefield_loop_" .. (ent:EntIndex()),
-      channel = CHAN_AUTO,
-      volume = 0.5,
-      level = 55,
-      pitch = 100,
-      sound = "ambient/energy/force_field_loop1.wav",
-    })
+    sound.Add(
+      {
+        name = "mappatcher_forcefield_loop_" .. (ent:EntIndex()),
+        channel = CHAN_AUTO,
+        volume = 0.5,
+        level = 55,
+        pitch = 100,
+        sound = "ambient/energy/force_field_loop1.wav"
+      }
+    )
     ent:EmitSound(ent.snd_forcefield_loop)
   end
 end
@@ -45,7 +49,8 @@ function TOOL:EntRemove(ent)
   end
 end
 
-function TOOL:EntStartTouch(ent) end
+function TOOL:EntStartTouch(ent)
+end
 
 function TOOL:EntShouldCollide(ent)
   return true

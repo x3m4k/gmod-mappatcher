@@ -95,7 +95,8 @@ function MapPatcher.GetButtonPaint(style)
     return function(w, h)
       surface.SetDrawColor(0, 0, 0, 255)
     end
-  else if style == "x.white" then
+  else
+    if style == "x.white" then
       return function(_, w, h)
         surface.SetDrawColor(255, 255, 255)
         surface.DrawRect(0, 0, w, h)
@@ -105,13 +106,11 @@ function MapPatcher.GetButtonPaint(style)
 end
 
 function MapPatcher.SetButtonStyle(button, style)
-
   button.Paint = MapPatcher.GetButtonPaint(style)
 
   if style == "x.white" then
     button:SetColor(Color(0, 0, 0, 255))
   end
-
 end
 
 function MapPatcher.GetWindowPaint(title)
@@ -136,35 +135,52 @@ function MapPatcher.GetWindowPaint(title)
 end
 
 MapPatcher.CVarDraw = CreateConVar("mappatcher_draw", "0")
-cvars.AddChangeCallback("mappatcher_draw", function(convar_name, value_old, value_new)
-  if not MapPatcher.HasAccess(LocalPlayer()) then
-    return
+cvars.AddChangeCallback(
+  "mappatcher_draw",
+  function(convar_name, value_old, value_new)
+    if not MapPatcher.HasAccess(LocalPlayer()) then
+      return
+    end
+
+    if tobool(value_new) then
+      MapPatcher.Editor.LoadMapClipBrushes()
+    end
+  end,
+  "mappatcher_draw"
+)
+
+net.Receive(
+  "mappatcher_update",
+  function(len)
+    local n_objects = net.ReadUInt(16)
+    for i = 1, n_objects do
+      local object_id = net.ReadUInt(16)
+      local object_class = net.ReadString()
+
+      local oldObject = MapPatcher.Objects[object_id]
+      if oldObject ~= nil then
+        oldObject:Terminate()
+      end
+
+      local object = MapPatcher.NewToolObject(object_class)
+      object.ID = object_id
+      MapPatcher.Objects[object_id] = object
+
+      local buffer = BufferInterface("net")
+      object:ReadFromBuffer(buffer)
+      object:SessionReadFromBuffer(buffer)
+
+      local clientModel = MapPatcher.Editor.LadderEnts[object_id]
+      if clientModel ~= nil and object_class == "null" then
+        clientModel:Remove()
+      end
+
+      object:Initialize()
+
+      MsgN("[MapPatcher] Object update: id(" .. object_id .. ") class(" .. object_class .. ")")
+    end
+    if MapPatcher.Editor.Enabled then
+      MapPatcher.Editor.UpdateMenu()
+    end
   end
-
-  if tobool(value_new) then
-    MapPatcher.Editor.LoadMapClipBrushes()
-  end
-end, "mappatcher_draw")
-
-net.Receive("mappatcher_update", function(len)
-  local n_objects = net.ReadUInt(16)
-  for i = 1, n_objects do
-    local object_id = net.ReadUInt(16)
-    local object_class = net.ReadString()
-
-    local object = MapPatcher.NewToolObject(object_class)
-    object.ID = object_id
-    MapPatcher.Objects[object_id] = object
-
-    local buffer = BufferInterface("net")
-    object:ReadFromBuffer(buffer)
-    object:SessionReadFromBuffer(buffer)
-
-    object:Initialize()
-
-    MsgN("[MapPatcher] Object update: id(" .. object_id .. ") class(" .. object_class .. ")")
-  end
-  if MapPatcher.Editor.Enabled then
-    MapPatcher.Editor.UpdateMenu()
-  end
-end)
+)

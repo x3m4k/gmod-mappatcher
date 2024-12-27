@@ -1,8 +1,9 @@
 local TOOL = TOOL
 
 TOOL.Base = "base_point"
-TOOL.Description =
-"Teleport target used by teleport brush. You can find more detail by reading description by selecting teleport brush. The teleport target will be oriented to the same direction as editor camera."
+if CLIENT then
+  TOOL.Description = language.GetPhrase("mappatcher.tools.tp_target.description")
+end
 
 --------------------------------------------------------------------------------
 
@@ -14,11 +15,13 @@ TOOL.TextureText = "#mappatcher.tools.tp_target.title"
 function TOOL:PreviewPaint(panel, w, h)
   local x, y = panel:LocalToScreen(0, 0)
   cam.Start3D(Vector(-35, -35, 74), Angle(35, 45, 0), 90, x, y, w, h)
-  render.Model({
-    model = "models/editor/playerstart.mdl",
-    pos = self.point,
-    angle = Angle(0, RealTime() * 40, 0),
-  })
+  render.Model(
+    {
+      model = "models/editor/playerstart.mdl",
+      pos = self.point,
+      angle = Angle(0, RealTime() * 40, 0)
+    }
+  )
 
   render.SetColorMaterial()
   render.DrawBox(
@@ -52,11 +55,13 @@ function TOOL:LeftClick(pos, ang)
 end
 
 function TOOL:EditorRender(selected)
-  render.Model({
-    model = "models/editor/playerstart.mdl",
-    pos = self.point,
-    angle = Angle(0, self.ang, 0),
-  })
+  render.Model(
+    {
+      model = "models/editor/playerstart.mdl",
+      pos = self.point,
+      angle = Angle(0, self.ang, 0)
+    }
+  )
 
   render.SetColorMaterial()
   render.DrawBox(self.point, Angle(), Vector(-16.5, -16.5, 0), Vector(16.5, 16.5, 73), self.TextureColor, true)
@@ -89,7 +94,7 @@ function TOOL:SetupObjectPanel(panel)
   DLabel:SetText("#mappatcher.tools.tp_target.settings.name")
 
   local TextEntry = vgui.Create("DTextEntry", panel) -- create the form as a child of frame
-  TextEntry:SetPos(50, 10)
+  TextEntry:SetPos(DLabel:GetTextSize() + 15, 10)
   TextEntry:SetSize(100, 20)
   TextEntry:SetText(self.name)
   TextEntry.OnChange = function(text_entry)
