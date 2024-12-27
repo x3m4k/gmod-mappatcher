@@ -63,6 +63,9 @@ https://www.youtube.com/watch?v=48pFpVRVkpY
 * **[x3m4k] Kill** - Kill/delete specified objects when touched.
 * **[x3m4k] Clip** - Multipurpose clip tool.
 
+## New Point Types (enhanced)
+* **[x3m4k] Ladder** - A simple ladder with customizable height and model.
+
 ## Commands
 
 `mappatcher` - Opens the mappatcher editor.
